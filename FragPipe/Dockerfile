@@ -1,3 +1,29 @@
+FROM ubuntu:24.04 AS package-extractor
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /tmp/pkg
+COPY pkg/FragPipe-24.0-linux.zip \
+     pkg/diatracer-2.2.1.zip \
+     pkg/IonQuant-1.11.20.zip \
+     pkg/MSFragger-4.4.1.zip \
+     /tmp/pkg/
+
+RUN mkdir -p /out/fragpipe-24.0 /tmp/diatracer /tmp/ionquant /tmp/msfragger \
+    && unzip -q FragPipe-24.0-linux.zip -d /out/fragpipe-24.0 \
+    && unzip -q diatracer-2.2.1.zip -d /tmp/diatracer \
+    && unzip -q IonQuant-1.11.20.zip -d /tmp/ionquant \
+    && unzip -q MSFragger-4.4.1.zip -d /tmp/msfragger \
+    && mkdir -p /out/fragpipe-24.0/fragpipe-24.0/tools \
+    && cp /tmp/diatracer/diatracer-2.2.1/diaTracer-2.2.1.jar \
+        /out/fragpipe-24.0/fragpipe-24.0/tools/ \
+    && cp /tmp/ionquant/IonQuant-1.11.20/IonQuant-1.11.20.jar \
+        /out/fragpipe-24.0/fragpipe-24.0/tools/ \
+    && cp -a /tmp/msfragger/MSFragger-4.4.1 \
+        /out/fragpipe-24.0/fragpipe-24.0/tools/
+
 FROM ubuntu:24.04
 USER root
 ARG DEBIAN_FRONTEND=noninteractive
@@ -26,8 +52,6 @@ RUN apt-get -y install \
     python3.11 \
     python3-pip \
     tar \
-    unzip \
-    wget \
     openjdk-17-jdk \
     vim \
     dotnet-runtime-6.0
@@ -51,11 +75,9 @@ WORKDIR /fragpipe_bin
 RUN mkdir tmp
 RUN chmod 777 tmp
 
-# download and install fragPipe
-RUN wget https://github.com/Nesvilab/FragPipe/releases/download/24.0/FragPipe-24.0-linux.zip -P fragpipe-24.0
-RUN unzip fragpipe-24.0/FragPipe-24.0-linux.zip -d fragpipe-24.0
+# install FragPipe and the additional tools from the package-extractor stage
+COPY --from=package-extractor /out/fragpipe-24.0/ /fragpipe_bin/fragpipe-24.0/
 RUN chmod -R 777 /fragpipe_bin
 
 # set environment variables
-ENV JAVA_HOME /usr/lib/jvm/java-17-openjdk-amd64/
-RUN export JAVA_HOME
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/
