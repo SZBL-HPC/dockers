@@ -1,4 +1,4 @@
-FROM alpine:3.22
+FROM alpine:latest
 
 ARG username=appuser
 ARG groupname=$username

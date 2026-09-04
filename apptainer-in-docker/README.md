@@ -68,6 +68,30 @@ The previous command may require `--privileged`.
 
 It is possible to compile a custom version of Apptainer by using the [`compile/Dockerfile`](compile/Dockerfile).
 
+To build the Alpine package version with Podman, run:
+
+```bash
+$ ./build-pkg.sh
+```
+
+The default image tag is `apptainer-in-docker:package`. A custom tag can be supplied as the first argument:
+
+```bash
+$ ./build-pkg.sh apptainer-in-docker:pkg
+```
+
+使用 `build-compile.sh` 构建源码版镜像，默认 checkout 上游 `release-1.5` 分支：
+
+```bash
+$ ./build-compile.sh
+```
+
+默认镜像标签为 `apptainer-in-docker:compile-release-1.5`。第一个参数可以覆盖 Apptainer ref，第二个参数可以覆盖镜像标签：
+
+```bash
+$ ./build-compile.sh v1.5.3 apptainer-in-docker:compile-v1.5.3
+```
+
 Apptainer version 1.2.0:
 
 ```bash
