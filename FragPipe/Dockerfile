@@ -58,7 +58,7 @@ RUN apt-get -y install \
 
 # install python packages
 RUN pip uninstall --break-system-packages easypqp \
-    && pip install --break-system-packages git+https://github.com/Nesvilab/easypqp.git@master \
+    && pip install --break-system-packages easypqp \
     && pip install --break-system-packages lxml \
     && pip install --break-system-packages plotly \
     && pip install --break-system-packages kaleido \
@@ -76,8 +76,9 @@ RUN mkdir tmp
 RUN chmod 777 tmp
 
 # install FragPipe and the additional tools from the package-extractor stage
-COPY --from=package-extractor /out/fragpipe-24.0/ /fragpipe_bin/fragpipe-24.0/
+COPY --from=package-extractor /out/fragpipe-24.0/ /fragpipe_bin/
 RUN chmod -R 777 /fragpipe_bin
 
 # set environment variables
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/
+RUN export JAVA_HOME
