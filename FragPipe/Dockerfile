@@ -62,7 +62,7 @@ RUN apt-get -y install \
     dotnet-runtime-8.0
 
 # install python packages
-RUN pip install --break-system-packages --upgrade easypqp \
+RUN pip install --break-system-packages --upgrade fragpipe-speclib \
     && pip install --break-system-packages lxml \
     && pip install --break-system-packages plotly \
     && pip install --break-system-packages kaleido \
