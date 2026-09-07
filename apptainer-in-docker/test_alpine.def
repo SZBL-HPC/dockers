@@ -1,0 +1,8 @@
+Bootstrap: docker
+From: alpine:3.18.2
+
+%post
+echo "You are building me, an Alpine Linux image."
+
+%runscript
+echo "You are running me, an Alpine Linux image!"
