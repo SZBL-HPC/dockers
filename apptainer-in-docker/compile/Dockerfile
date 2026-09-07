@@ -1,4 +1,4 @@
-FROM golang:1.25-alpine3.22 AS builder
+FROM golang:1-alpine AS builder
 
 RUN apk add --no-cache \
         # Required for apptainer to find min go version
