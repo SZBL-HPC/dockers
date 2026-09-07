@@ -8,6 +8,7 @@ packages=(
     "https://github.com/SZBL-HPC/dockers/releases/download/zip/diatracer-2.2.1.zip|334dc77b5ab2acf9d46dc97c39be653b7088b8ee"
     "https://github.com/SZBL-HPC/dockers/releases/download/zip/IonQuant-1.11.20.zip|fc78b5be42dc0ee192f0949c0eabf590b05c9241"
     "https://github.com/SZBL-HPC/dockers/releases/download/zip/MSFragger-4.4.1.zip|d69c12476faeb26607f832179bbce307b687b53e"
+    "https://github.com/vdemichev/DiaNN/releases/download/2.0/DIA-NN-2.6.1-Academia-Linux.zip|38da15fb3f5327770839388e406fef4d52ec4718"
 )
 
 script_dir="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"

@@ -9,20 +9,24 @@ COPY pkg/FragPipe-24.0-linux.zip \
      pkg/diatracer-2.2.1.zip \
      pkg/IonQuant-1.11.20.zip \
      pkg/MSFragger-4.4.1.zip \
+     pkg/DIA-NN-2.6.1-Academia-Linux.zip \
      /tmp/pkg/
 
-RUN mkdir -p /out/fragpipe-24.0 /tmp/diatracer /tmp/ionquant /tmp/msfragger \
+RUN mkdir -p /out/fragpipe-24.0 /tmp/diatracer /tmp/ionquant /tmp/msfragger /tmp/diann \
     && unzip -q FragPipe-24.0-linux.zip -d /out/fragpipe-24.0 \
     && unzip -q diatracer-2.2.1.zip -d /tmp/diatracer \
     && unzip -q IonQuant-1.11.20.zip -d /tmp/ionquant \
     && unzip -q MSFragger-4.4.1.zip -d /tmp/msfragger \
-    && mkdir -p /out/fragpipe-24.0/fragpipe-24.0/tools \
+    && unzip -q DIA-NN-2.6.1-Academia-Linux.zip -d /tmp/diann \
+    && mkdir -p /out/fragpipe-24.0/fragpipe-24.0/tools/diann \
     && cp /tmp/diatracer/diatracer-2.2.1/diaTracer-2.2.1.jar \
         /out/fragpipe-24.0/fragpipe-24.0/tools/ \
     && cp /tmp/ionquant/IonQuant-1.11.20/IonQuant-1.11.20.jar \
         /out/fragpipe-24.0/fragpipe-24.0/tools/ \
     && cp -a /tmp/msfragger/MSFragger-4.4.1 \
-        /out/fragpipe-24.0/fragpipe-24.0/tools/
+        /out/fragpipe-24.0/fragpipe-24.0/tools/ \
+    && cp -a /tmp/diann/diann-2.6.1 \
+        /out/fragpipe-24.0/fragpipe-24.0/tools/diann/
 
 FROM ubuntu:24.04
 USER root
@@ -54,11 +58,11 @@ RUN apt-get -y install \
     tar \
     openjdk-17-jdk \
     vim \
-    dotnet-runtime-6.0
+    dotnet-runtime-6.0 \
+    dotnet-runtime-8.0
 
 # install python packages
-RUN pip uninstall --break-system-packages easypqp \
-    && pip install --break-system-packages easypqp \
+RUN pip install --break-system-packages --upgrade easypqp \
     && pip install --break-system-packages lxml \
     && pip install --break-system-packages plotly \
     && pip install --break-system-packages kaleido \
