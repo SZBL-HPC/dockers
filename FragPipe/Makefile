@@ -28,14 +28,24 @@ build: download
 download:
 	./pkg/download.sh
 
-tar: build
+tar: $(TAR)
+
+$(TAR):
+	$(MAKE) build
 	$(PODMAN) save --format docker-archive --output "$(TAR)" "$(IMAGE)"
 
-sif: tar
-	$(PODMAN) run --rm \
-		-v "$(CURDIR):/work" \
-		$(APPTAINER_IMAGE) \
-		build "$(SIF)" "docker-archive://$(TAR)"
+sif: $(SIF)
+
+$(SIF):
+	$(MAKE) tar
+	if command -v apptainer >/dev/null 2>&1; then \
+		apptainer build "$(SIF)" "docker-archive://$(TAR)"; \
+	else \
+		$(PODMAN) run --rm \
+			-v "$(CURDIR):/work" \
+			$(APPTAINER_IMAGE) \
+			build "$(SIF)" "docker-archive://$(TAR)"; \
+	fi
 
 # Append a second-resolution UTC timestamp to the image tag.
 force-build:
